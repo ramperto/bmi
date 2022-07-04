@@ -1,0 +1,14 @@
+environment: okteto
+container:
+  name: bmi-service
+  port: 5000
+  image: greenlemon/bmi-service
+  tag: latest
+  resources:
+    requests:  
+      memory: "10Mi"
+      cpu: "100m"
+    limits:
+      memory: "20Mi"
+      cpu: "250m"
+replicas: 1

@@ -43,4 +43,4 @@ async def bmi(height: float, weight: float):
             status_code=200)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=80)
+    uvicorn.run(app, host="0.0.0.0", port=5000)
