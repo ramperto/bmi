@@ -39,7 +39,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: greenlemon/bmi-service
+          images: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
       
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -47,5 +47,27 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.meta.outputs.labels }}       
 
+      - name: remove old docker instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          # port: ${{ secrets.TEST_PORT }}
+          key: ${{ secrets.DEV_PRIV_KEY }}
+          script: |
+            docker stop ${{ secrets.DOCKER_IMAGE }}
+            docker rm ${{ secrets.DOCKER_IMAGE }} 
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
+
+      - name: install new docker instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          # port: ${{ secrets.TEST_PORT }}
+          key: ${{ secrets.DEV_PRIV_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
+            docker run -d --name "${{ secrets.DOCKER_IMAGE }}" -p 3000:3000 -it ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
