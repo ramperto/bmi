@@ -1,7 +1,7 @@
-environment: okteto
+environment: default
 container:
   name: bmi-service
-  port: 5000
+  port: 6000
   image: greenlemon/bmi-service
   tag: latest
   resources:
