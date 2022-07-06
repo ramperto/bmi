@@ -12,11 +12,8 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
 
-      # - name: update docker files
-      #   run: cp dockerfiles/bmi_service/* .
-
-      # - name: run docker compose test
-      #   run: docker-compose -f docker-compose-test-service.yml -p ci up --abort-on-container-exit --exit-code-from sut
+      - name: test pre-deploy
+        run: docker-compose -f docker-compose-test-service.yml -p ci up --abort-on-container-exit --exit-code-from sut 
 
   push_to_registry:
     needs: test_service
@@ -28,7 +25,6 @@ jobs:
 
       # - name: create dockerfile
       #   run: cp dockerfiles/bmi_service/Dockerfile.bmi_service Dockerfile
-      
       - name: Log in to Docker Hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
@@ -71,7 +67,7 @@ jobs:
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
             docker run -d --name "${{ secrets.DOCKER_IMAGE }}" -p 3000:3000 -it ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
-            
+
       - name: after-deploy test
         uses: appleboy/ssh-action@master
         with:

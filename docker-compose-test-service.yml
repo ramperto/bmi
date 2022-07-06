@@ -1,0 +1,8 @@
+sut:
+  build: .
+  dockerfile: Dockerfile.test_bmi
+  links:
+    - api
+api:
+  build: .
+  dockerfile: Dockerfile
