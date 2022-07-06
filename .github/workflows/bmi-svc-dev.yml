@@ -12,8 +12,8 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3
 
-      - name: test pre-deploy
-        run: docker-compose -f docker-compose-test-service.yml -p ci up --abort-on-container-exit --exit-code-from sut 
+      # - name: test pre-deploy
+      #   run: docker-compose -f docker-compose-test-service.yml -p ci up --abort-on-container-exit --exit-code-from sut 
 
   push_to_registry:
     needs: test_service
