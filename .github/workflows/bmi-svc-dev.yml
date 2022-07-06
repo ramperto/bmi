@@ -71,3 +71,13 @@ jobs:
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:latest
             docker run -d --name "${{ secrets.DOCKER_IMAGE }}" -p 3000:3000 -it ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}
+            
+      - name: after-deploy test
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          # port: ${{ secrets.TEST_PORT }}
+          key: ${{ secrets.DEV_PRIV_KEY }}
+          script: |
+            curl "localhost:3000/?height=180&weight=80"
