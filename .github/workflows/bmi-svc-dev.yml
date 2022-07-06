@@ -1,4 +1,4 @@
-name: DEVELOPMENT node service Deployment
+name: DEVELOPMENT bmi service Deployment
 on: 
   push:
     tags:
